@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Management - Level 5 | Japanese Learning</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dark-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .cr-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--level-5), var(--primary-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--primary-pink);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-pink);
+            color: white;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .add-vocab-section, .vocab-list-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .add-vocab-section {
+            border-top: 5px solid var(--level-5);
+        }
+        
+        .vocab-list-section {
+            border-top: 5px solid var(--primary-pink);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-pink);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--bg-secondary);
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Kanit', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--level-5);
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+        }
+        
+        .add-btn {
+            background: linear-gradient(45deg, var(--level-5), var(--accent-pink));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .add-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(156, 39, 176, 0.4);
+        }
+        
+        .add-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .vocab-list {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--bg-secondary);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        
+        .vocab-item {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .vocab-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(233, 30, 99, 0.2);
+        }
+        
+        .vocab-item.default {
+            border-left: 4px solid var(--primary-pink);
+        }
+        
+        .vocab-item.custom {
+            border-left: 4px solid var(--level-5);
+        }
+        
+        .vocab-content {
+            flex: 1;
+        }
+        
+        .vocab-thai {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+        
+        .vocab-romaji {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+        
+        .vocab-hiragana {
+            font-size: 1.1rem;
+            color: var(--primary-pink);
+            font-weight: 500;
+        }
+        
+        .vocab-badge {
+            background: var(--level-5);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+        
+        .delete-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .delete-btn:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
+        }
+        
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .stats-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-top: 5px solid var(--primary-pink);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-pink);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+            border: 2px solid var(--success);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .error-message {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--error);
+            border: 2px solid var(--error);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .add-vocab-section, .vocab-list-section {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cr-container {
+                padding: 15px;
+            }
+            
+            .vocab-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .delete-btn {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cr-container">
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> กลับหน้าหลัก
+        </button>
+        
+        <div class="header-section">
+            <h1 class="page-title">จัดการคำศัพท์ Level 5</h1>
+            <p class="page-subtitle">เพิ่มและจัดการคำศัพท์สำหรับการทดสอบเขียนฮิรางานะ</p>
+        </div>
+        
+        <div class="stats-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i> สถิติคำศัพท์
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCount">50</div>
+                    <div class="stat-label">คำศัพท์ทั้งหมด</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="defaultCount">50</div>
+                    <div class="stat-label">คำศัพท์พื้นฐาน</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="customCount">0</div>
+                    <div class="stat-label">คำศัพท์ที่เพิ่ม</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgLength">0</div>
+                    <div class="stat-label">ความยาวเฉลี่ย</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="add-vocab-section">
+                <h2 class="section-title">
+                    <i class="fas fa-plus-circle"></i> เพิ่มคำศัพท์ใหม่
+                </h2>
+                
+                <div id="messageContainer"></div>
+                
+                <form id="addVocabForm" onsubmit="addVocabulary(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="thaiInput">คำศัพท์ภาษาไทย *</label>
+                        <input 
+                            type="text" 
+                            id="thaiInput" 
+                            class="form-input" 
+                            placeholder="เช่น สวัสดี"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="romajiInput">คำอ่าน (Romaji) *</label>
+                        <input 
+                            type="text" 
+                            id="romajiInput" 
+                            class="form-input" 
+                            placeholder="เช่น konnichiwa"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="hiraganaInput">ตัวอักษรฮิรางานะ *</label>
+                        <input 
+                            type="text" 
+                            id="hiraganaInput" 
+                            class="form-input" 
+                            placeholder="เช่น こんにちは"
+                            required
+                        >
+                    </div>
+                    
+                    <button type="submit" class="add-btn">
+                        <i class="fas fa-plus"></i> เพิ่มคำศัพท์
+                    </button>
+                </form>
+            </div>
+            
+            <div class="vocab-list-section">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i> รายการคำศัพท์ทั้งหมด
+                </h2>
+                
+                <div id="vocabList" class="vocab-list">
+                    <!-- Vocabulary list will be generated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="hiragana.js"></script>
+    <script>
+        // Initialize page
+        let allVocabulary = [];
+        
+        function initPage() {
+            loadVocabulary();
+            updateStats();
+        }
+        
+        // Load vocabulary from storage
+        function loadVocabulary() {
+            // Load custom vocabulary and merge with default
+            const customVocab = HiraganaHelper.loadCustomVocabulary();
+            const defaultVocab = HiraganaHelper.defaultVocabulary();
+            allVocabulary = [...defaultVocab, ...customVocab];
+            renderVocabularyList();
+        }
+        
+        // Render vocabulary list
+        function renderVocabularyList() {
+            const listContainer = document.getElementById('vocabList');
+            
+            if (allVocabulary.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>ยังไม่มีคำศัพท์ในระบบ</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            listContainer.innerHTML = '';
+            
+            allVocabulary.forEach((vocab, index) => {
+                // Check if this vocabulary is in the default list (first 50 items)
+                const defaultVocab = HiraganaHelper.defaultVocabulary();
+                const isDefault = defaultVocab.some(defaultVocab => 
+                    defaultVocab.thai === vocab.thai && 
+                    defaultVocab.romaji === vocab.romaji && 
+                    defaultVocab.hiragana === vocab.hiragana
+                );
+                
+                const vocabItem = document.createElement('div');
+                vocabItem.className = `vocab-item ${isDefault ? 'default' : 'custom'}`;
+                
+                vocabItem.innerHTML = `
+                    <div class="vocab-content">
+                        <div class="vocab-thai">
+                            ${vocab.thai}
+                            ${!isDefault ? '<span class="vocab-badge">เพิ่มเอง</span>' : ''}
+                        </div>
+                        <div class="vocab-romaji">${vocab.romaji}</div>
+                        <div class="vocab-hiragana">${vocab.hiragana}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteVocabulary(${index})" ${isDefault ? 'disabled' : ''}>
+                        <i class="fas fa-trash"></i>
+                        ${isDefault ? 'ค่าเริ่มต้น' : 'ลบ'}
+                    </button>
+                `;
+                
+                listContainer.appendChild(vocabItem);
+            });
+        }
+        
+        // Add vocabulary
+        function addVocabulary(event) {
+            event.preventDefault();
+            
+            const thaiInput = document.getElementById('thaiInput');
+            const romajiInput = document.getElementById('romajiInput');
+            const hiraganaInput = document.getElementById('hiraganaInput');
+            
+            const newVocab = {
+                thai: thaiInput.value.trim(),
+                romaji: romajiInput.value.trim(),
+                hiragana: hiraganaInput.value.trim()
+            };
+            
+            // Validate
+            if (!newVocab.thai || !newVocab.romaji || !newVocab.hiragana) {
+                showMessage('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'error');
+                return;
+            }
+            
+            // Check for duplicates
+            const isDuplicate = allVocabulary.some(vocab => 
+                vocab.thai === newVocab.thai || 
+                vocab.hiragana === newVocab.hiragana
+            );
+            
+            if (isDuplicate) {
+                showMessage('คำศัพท์นี้มีอยู่แล้วในระบบ', 'error');
+                return;
+            }
+            
+            // Add to storage
+            HiraganaHelper.saveVocabulary(newVocab);
+            
+            // Clear form
+            thaiInput.value = '';
+            romajiInput.value = '';
+            hiraganaInput.value = '';
+            
+            // Reload and show success
+            loadVocabulary();
+            updateStats();
+            showMessage('เพิ่มคำศัพท์สำเร็จ!', 'success');
+        }
+        
+        // Delete vocabulary
+        function deleteVocabulary(index) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบคำศัพท์นี้?')) {
+                HiraganaHelper.deleteVocabulary(index);
+                loadVocabulary();
+                updateStats();
+                showMessage('ลบคำศัพท์สำเร็จ', 'success');
+            }
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const totalCount = allVocabulary.length;
+            const defaultCount = 50; // All 50 are default now
+            const customCount = totalCount - defaultCount;
+            
+            let totalLength = 0;
+            allVocabulary.forEach(vocab => {
+                totalLength += vocab.hiragana.length;
+            });
+            const avgLength = totalCount > 0 ? (totalLength / totalCount).toFixed(1) : 0;
+            
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('defaultCount').textContent = defaultCount;
+            document.getElementById('customCount').textContent = customCount;
+            document.getElementById('avgLength').textContent = avgLength;
+        }
+        
+        // Show message
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `${type}-message`;
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            messageContainer.innerHTML = '';
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                messageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    messageContainer.innerHTML = '';
+                }, 300);
+            }, 3000);
+        }
+        
+        // Go back to main page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            // Check for saved dark mode preference
+            const body = document.body;
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+            }
+            
+            initPage();
+        };
+    </script>
+</body>
+</html>
